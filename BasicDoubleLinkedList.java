@@ -4,7 +4,7 @@ import java.util.Iterator;
 import java.util.ListIterator;
 import java.util.NoSuchElementException;
 
-public class BasicDoubleLinkedList<T> implements Iterable {
+public class BasicDoubleLinkedList<T> implements Iterable<T> {
 
 	protected Node head;
 	protected Node tail;
@@ -54,7 +54,7 @@ public class BasicDoubleLinkedList<T> implements Iterable {
 	 * previous(). Remember that we should be able to call the hasNext() method as
 	 * many times as we want without changing what is considered the next element.
 	 */
-	public ListIterator<T> iterator() throws UnsupportedOperationException, java.util.NoSuchElementException {
+	public Iterator<T> iterator() throws UnsupportedOperationException, NoSuchElementException {
 
 		/*
 		 * java.util.NoSuchElementException - Your next() method should throw
@@ -65,7 +65,7 @@ public class BasicDoubleLinkedList<T> implements Iterable {
 		 * methods, throw UnsupportedOperationException if called.
 		 */
 
-		return new ListIterator();
+		return new DoublyListIterator();
 	}
 
 	/*
@@ -172,7 +172,7 @@ public class BasicDoubleLinkedList<T> implements Iterable {
 	}
 
 	/*
-	 * Removes and returns the last element from the list. If there are no elements
+	 * Removes and returns the first element from the list. If there are no elements
 	 * the method returns null. Do not implement implement this method using
 	 * iterators.
 	 * 
@@ -182,7 +182,7 @@ public class BasicDoubleLinkedList<T> implements Iterable {
 
 		// check if list empty and if true return null
 		if (head == null)
-			throw new NullPointerException(null);
+			throw new NullPointerException("List is Empty");
 
 		Node newDataCopy = head;
 		head = head.nextNode;
@@ -202,7 +202,7 @@ public class BasicDoubleLinkedList<T> implements Iterable {
 
 		// check is if list empty and if true return null
 		if (head == null)
-			throw new NullPointerException(null);
+			throw new NullPointerException("Empty List");
 
 		Node newDataCopy = tail;
 		tail.previosNode.nextNode = null;
@@ -262,9 +262,19 @@ public class BasicDoubleLinkedList<T> implements Iterable {
 		for (int i = 0; i < getSize(); i++) {
 
 			// add items to list
-			myList.add(retrieveFirstElement());
+			myList.add((retrieve(i)));
+
 		}
-		return new ArrayList<T>(myList);
+
+		for (int i = 0; i < getSize(); i++) {
+
+			// add items to list
+			System.out.println("List " + i + ": " + myList.get(i)); // TEST
+			// myList.get(i);
+
+		}
+		System.out.println(myList);
+		return myList;
 	}
 
 	/*
@@ -299,29 +309,24 @@ public class BasicDoubleLinkedList<T> implements Iterable {
 		}
 	}
 
-	// ListIterator class
-	class ListIterator<T> implements Iterator<T> {
+	// DoublyListIterator class
+	class DoublyListIterator implements Iterator<T> {
 		private Node currentNode;
-		private Node lastNode;
+		private Node myPreviousNode;
 		private int nodeIndex;
 
-		ListIterator() {
+		DoublyListIterator() {
 			currentNode = head;
-			lastNode = null;
+			myPreviousNode = null;
 			nodeIndex = 0;
 		}
 
-		public UnsupportedOperationException nextIndex() {
-			return new UnsupportedOperationException();
+		public int nextIndex() {
+			return nodeIndex + 1;
 		}
 
-		public UnsupportedOperationException prevIndex() {
-			return new UnsupportedOperationException();
-		}
-
-		@Override
-		public boolean hasNext() {
-			return nodeIndex < SIZE;
+		public int prevIndex() {
+			return nodeIndex;
 		}
 
 		public boolean hasPrevious() {
@@ -333,23 +338,30 @@ public class BasicDoubleLinkedList<T> implements Iterable {
 				return null;
 
 			currentNode = currentNode.previosNode;
-			lastNode = currentNode;
+			myPreviousNode = currentNode;
+
 			nodeIndex--;
-			return (T) currentNode.myData;
+
+			return currentNode.myData;
+		}
+
+		@Override
+		public boolean hasNext() {
+			return nodeIndex < SIZE;
 		}
 
 		@Override
 		public T next() {
-			try {
-				hasNext();
-			} catch (Exception e) {
-				throw new NoSuchElementException();
+
+			if (!hasNext()) {
+				return null;
 			}
 
-			lastNode = currentNode;
+			myPreviousNode = currentNode;
 			T item = (T) currentNode.myData;
 			currentNode = currentNode.nextNode;
 			nodeIndex++;
+
 			return item;
 		}
 

@@ -1,4 +1,6 @@
 import java.util.Comparator;
+import java.util.Iterator;
+import java.util.ListIterator;
 
 /*
  * Implements a generic sorted double list using a provided Comparator. It extends BasicDoubleLinkedList class.
@@ -138,9 +140,19 @@ public class SortedDoubleLinkedList<T> extends BasicDoubleLinkedList<T> {
 	 * 
 	 * @return an iterator positioned at the head of the list
 	 */
-	public ListIterator<T> iterator() {
+	public Iterator<T> iterator() {
 		super.iterator();
-		return new ListIterator();
+
+//		 if (SIZE < 0 || this.getSize() < SIZE) {
+//		        throw new IndexOutOfBoundsException();
+//		    }
+//
+//		    Iterator<T> it = new Iterator();
+//
+//		    for (; SIZE > 0; --SIZE) {
+//		        it.next(); // ignore the first x values
+//		    }
+		return new DoublyListIterator();
 	}
 
 	@Override

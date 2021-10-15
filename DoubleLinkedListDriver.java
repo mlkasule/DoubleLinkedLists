@@ -192,13 +192,13 @@ public class DoubleLinkedListDriver extends Application {
 			//start iterator button
 			if (e.getSource() == startIterator) {
 				if(basicDLL.isSelected()){
-					basicIter = basic.iterator();
+					basicIter = (ListIterator<String>) basic.iterator();
 					iteratorField.setText("");
 					basicIterArea.setText("-->");
 					basicIterCount = 0;
 				}
 				else {
-					sortedIter = sorted.iterator();
+					sortedIter = (ListIterator<String>) sorted.iterator();
 					iteratorField.setText("");
 					sortedIterArea.setText("-->");
 					sortedIterCount = 0;
